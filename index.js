@@ -86,6 +86,7 @@ async function run() {
             res.json(order);
         })
 
+
         //POST users to database
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -106,7 +107,7 @@ async function run() {
         //Admin
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
-            console.log('put', user);
+            // console.log('put', user);
             const filter = { email: user.email };
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
@@ -117,13 +118,14 @@ async function run() {
             const email = req.params.email;
             const query = { email: email };
             const user = await usersCollection.findOne(query);
-            let isAdmin = false
-
+            let isAdmin = false;
             if (user.role === 'admin') {
                 isAdmin = true;
             }
             res.json({ admin: isAdmin })
+
         })
+
         //POST Reviews API
         app.post('/reviews', async (req, res) => {
             const reviews = req.body;
