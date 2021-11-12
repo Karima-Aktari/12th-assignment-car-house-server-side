@@ -26,6 +26,7 @@ async function run() {
         const ordersCollection = database.collection('orders');
         const usersCollection = database.collection('users');
         const reviewsCollection = database.collection('reviews')
+        const offersCollection = database.collection('offers');
         // console.log(carsCollection);
         //GET CAR API
         app.get('/cars', async (req, res) => {
@@ -134,6 +135,12 @@ async function run() {
             const cursor = reviewsCollection.find({});
             const cars = await cursor.toArray();
             res.send(cars);
+        })
+        //GET offers API
+        app.get('/offers', async (req, res) => {
+            const cursor = offersCollection.find({});
+            const offers = await cursor.toArray();
+            res.send(offers);
         })
 
     }
