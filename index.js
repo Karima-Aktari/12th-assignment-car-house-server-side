@@ -27,7 +27,7 @@ async function run() {
         const usersCollection = database.collection('users');
         const reviewsCollection = database.collection('reviews')
         const offersCollection = database.collection('offers');
-        // console.log(carsCollection);
+
         //GET CAR API
         app.get('/cars', async (req, res) => {
             const cursor = carsCollection.find({});
@@ -47,7 +47,6 @@ async function run() {
         app.post('/cars', async (req, res) => {
             const cars = req.body;
             const result = await carsCollection.insertOne(cars);
-            // console.log('hitted', result);
             res.send(result);
         })
         //DELETE Product
@@ -71,6 +70,22 @@ async function run() {
             const orders = await cursor.toArray();
             res.json(orders);
         })
+        // Update Order
+
+
+        app.put("/orders/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: "Shipped"
+                },
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc, options);
+            console.log(result);
+            res.json(result)
+        });
         //Get My Orders
         app.get('/myOrders/:email', async (req, res) => {
             const email = req.params.email;
@@ -104,7 +119,8 @@ async function run() {
             res.json(result);
         });
 
-        //Admin
+
+        //Make Admin
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             // console.log('put', user);
@@ -116,14 +132,22 @@ async function run() {
         // User set Role-Admin
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
-            const query = { email: email };
-            const user = await usersCollection.findOne(query);
-            let isAdmin = false;
-            if (user.role === 'admin') {
-                isAdmin = true;
-            }
-            res.json({ admin: isAdmin })
 
+            if (email) {
+                const query = { email: email };
+                const user = await usersCollection.findOne(query);
+                let isAdmin = false;
+                if (user) {
+                    if (user.role === 'admin') {
+                        isAdmin = true;
+                    }
+                    res.json({ admin: isAdmin })
+                } else {
+                    res.json({ admin: isAdmin })
+                }
+            } else {
+                res.json({ admin: false })
+            }
         })
 
         //POST Reviews API
