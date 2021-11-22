@@ -129,6 +129,7 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
         });
+
         // User set Role-Admin
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -176,6 +177,7 @@ async function run() {
 }
 run().catch(console.dir);
 
+//Server checking
 app.get('/', (req, res) => {
     res.send('Server is Connected');
 });
